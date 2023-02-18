@@ -1,65 +1,57 @@
-import Head from 'next/head'
-import Image from 'next/image'
+import {useState} from "react";
+import {openai} from "../lib/openai";
+// @ts-ignore
+import {Prism} from 'react-syntax-highlighter';
+// @ts-ignore
+import {atomOneDark} from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import toast from "react-hot-toast";
 
-import styles from '@/pages/index.module.css'
 
 export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    const [problem, setProblem] = useState("")
+    const [code, setCode] = useState("")
+    const [resultCode, setResultCode] = useState("")
 
-      <main>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+    function handleAnswerSubmit() {
+        const toastId = toast.loading("Processing...");
+        openai.createCompletion({
+            prompt: `Problem: ${problem}\nCode:\n${code}\nSuggested solution: `,
+            model: "text-davinci-003",
+            max_tokens: 1024,
+            temperature: 0.2
+        }).then((res) => {
+            //@ts-ignore
+            const responseText: any = res.data.choices[0].text;
+            console.log(responseText);
+            setResultCode(responseText);
+        }).finally(() => {
+            toast.dismiss(toastId);
+        });
+    }
 
-        <p className={styles.description}>
-          Get started by editing <code>pages/index.js</code>
-        </p>
+    return (
+        <div className={"flex flex-col justify-start items-center h-screen"}>
+            <div className={"flex flex-col w-1/2 [&>*]:my-1 mt-10"}>
+                <input className={"w-full p-2 rounded-lg border-2"} placeholder={"Enter your problem"}
+                       onChange={(event) => {
+                           setProblem(event.target.value)
+                       }}/>
+                <textarea className={"w-full p-2 rounded-lg border-2"} placeholder={"Enter your code"}
+                          onChange={(event) => {
+                              setCode(event.target.value)
+                          }}/>
+                <button
+                    className={"bg-green-600 hover:bg-green-700 transition-all text-white p-2 rounded-lg cursor-pointer"}
+                    onClick={handleAnswerSubmit}>Submit
+                </button>
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+            </div>
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a href="https://vercel.com/new" className={styles.card}>
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+            <div className={"w-full h-fit"}>
+                <Prism language="jsx" style={atomOneDark}>
+                    {resultCode}
+                </Prism>
+            </div>
         </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
-    </div>
-  )
+    );
 }
