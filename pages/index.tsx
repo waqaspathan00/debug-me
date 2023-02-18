@@ -24,7 +24,11 @@ export default function Home() {
             const responseText: any = res.data.choices[0].text;
             console.log(responseText);
             setResultCode(responseText);
-        }).finally(() => {
+        }).catch((err) => {
+            console.log(err)
+            toast.error("Something went wrong");
+        })
+            .finally(() => {
             toast.dismiss(toastId);
         });
     }
