@@ -1,6 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,700;0,900;1,600&family=Rock+Salt&display=swap');
+
+input, textarea, h2{
+    font-family: 'Montserrat', sans-serif;
+}
 
 html,
 body {

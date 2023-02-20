@@ -12,7 +12,7 @@ module.exports = {
         extend: {
             colors: {
                 "grey-100": "#282A36",
-                "grey-200": "#606582"
+                "grey-200": "#606582",
             },
             backgroundSize: {
                 'size-200': '200% 200%',
@@ -20,6 +20,9 @@ module.exports = {
             backgroundPosition: {
                 'pos-0': '0% 0%',
                 'pos-100': '100% 100%',
+            },
+            fontFamily: {
+                'rock-salt': ['Rock Salt', 'cursive']
             },
         },
     },
