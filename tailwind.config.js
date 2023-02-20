@@ -10,6 +10,10 @@ module.exports = {
     ],
     theme: {
         extend: {
+            colors: {
+                "grey-100": "#282A36",
+                "grey-200": "#606582"
+            },
             backgroundSize: {
                 'size-200': '200% 200%',
             },
