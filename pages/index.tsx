@@ -10,7 +10,7 @@ import {GrLanguage} from "react-icons/gr";
 
 
 export default function Home() {
-    const [language, setLanguage] = useState("jsx");
+    const [language, setLanguage] = useState("");
     const [problem, setProblem] = useState("")
     const [code, setCode] = useState("")
     const [resultCode, setResultCode] = useState("")
@@ -50,6 +50,11 @@ export default function Home() {
     };
 
     function handleAnswerSubmit() {
+        if (!problem) {
+            toast.error("Please enter a problem");
+            return;
+        }
+
         const toastId = toast.loading("Processing...");
         const prompt = `Problem: ${problem}\n${code ? `Code:\n${code}\n` : ""}Suggested solution: `;
         openai.createCompletion({
@@ -74,27 +79,35 @@ export default function Home() {
         setLanguage(event.target.value);
     }
 
+    function handleClearClick() {
+        setLanguage("")
+        setProblem("");
+        setCode("");
+        setResultCode("");
+        setSelectedTag("");
+    }
+
     return (
         <div className={"flex flex-col justify-start items-center h-screen bg-grey-200"}>
             {/* Hero Section */}
             <div
-                className={"flex md:flex-row flex-col [&>*]:my-2 justify-between items-center h-fit md:w-1/3 w-full mt-12"}>
+                className={"flex md:flex-row flex-col [&>*]:my-2 justify-between items-center h-fit md:w-2/5 w-full mt-12"}>
                 {/*<h1 className={"text-6xl text-white"}><span*/}
                 {/*    className={"text-green-400 font-rock-salt"}>Debug</span><span className={"text-green-700 font-rock-salt"}>Me</span>*/}
                 {/*</h1>*/}
                 {/*<img className={"w-32"} alt={"logo"} src={"/icon.png"} />*/}
-                <h1 className={"text-6xl text-white mt-20 font-rock-salt text-green-100"}>DebugMe</h1>
-                <h2 className={"flex md:flex-col flex-row [&>*]:mx-2 items-end text-2xl text-white"}>
-                    <span className={"text-green-300 font-rock-salt"}>Squish🦶🏼</span>
-                    <span className={"text-green-500 font-rock-salt"}>Bugs🐞</span>
-                    <span className={"text-green-700 font-rock-salt"}>Faster🏃🏽‍</span>
+                <h1 className={"text-6xl text-white mt-20 font-rock-salt text-green-100 my-4"}>DebugMe</h1>
+                <h2 className={"flex md:flex-col flex-row [&>*]:mx-4 items-end text-2xl text-white"}>
+                    <span className={"text-green-300 font-rock-salt whitespace-nowrap"}>Squish🦶🏼</span>
+                    <span className={"text-green-500 font-rock-salt whitespace-nowrap"}>Bugs🐞</span>
+                    <span className={"text-green-700 font-rock-salt whitespace-nowrap"}>Faster🏃🏽‍</span>
                 </h2>
             </div>
 
             {/* Example Section */}
-            <div className={"flex flex-col mt-12"}>
-                <h3 className={"text-2xl text-white ml-2"}>Try an Example</h3>
-                <div className={"flex flex-wrap [&>*]:m-2"}>
+            <div className={"flex flex-col mt-12 md:w-1/2 w-full"}>
+                <h3 className={"text-2xl text-white ml-4"}>Try an Example</h3>
+                <div className={"flex flex-wrap [&>*]:m-2 ml-2"}>
                     <ExampleQuizTag selectedTag={selectedTag} setSelectedTag={setSelectedTag}
                                     tagText={"Missing syntax"} exampleLanguage={"python"}
                                     exampleProblem={"why does this code keep crashing?"}
@@ -109,8 +122,8 @@ export default function Home() {
                                         "    return `${minutes}:${seconds}`;\n" +
                                         "}"}/>
                     <ExampleQuizTag selectedTag={selectedTag} setSelectedTag={setSelectedTag}
-                                    tagText={"Controlled vs. uncontrolled inputs"} exampleLanguage={""}
-                                    exampleProblem={"difference between controlled and uncontrolled inputs in React with code examples"}
+                                    tagText={"HTML button differences"} exampleLanguage={""}
+                                    exampleProblem={"difference between button and submit button in HTML"}
                                     exampleCode={""}/>
                 </div>
             </div>
@@ -121,7 +134,7 @@ export default function Home() {
                 <input onChange={(event: any) => {
                     setLanguage(event.target.value)
                 }} className={"w-11/12 bg-grey-100 p-2 rounded-lg text-grey-200"}
-                       placeholder={"Programming language (optional) - python, javascript, sql..."} value={language}/>
+                       placeholder={"Programming language (optional) - jsx, python, javascript, sql..."} value={language}/>
                 {/*<IconInputBox icon={GrLanguage} placeholder={"Enter programming language"} state={language} handleChange={handleLanguageChange}/>*/}
                 <textarea className={"w-11/12 p-2 bg-grey-100 text-grey-200 rounded-lg"}
                           placeholder={"Your problem - 'Why is there a syntax error..., How to get today's date...'"}
@@ -133,13 +146,21 @@ export default function Home() {
                           onChange={(event) => {
                               setCode(event.target.value)
                           }} value={code}/>
-                <button
-                    className={"w-1/2 p-2 rounded-lg transition-all text-white duration-300 bg-gradient-to-r from-green-300 to-green-700 via-green-600 bg-size-200 bg-pos-0 hover:bg-pos-100"}
-                    onClick={handleAnswerSubmit}>Submit
-                </button>
+                <div className={"flex w-11/12 justify-around"}>
+                    <button
+                        onClick={handleClearClick}
+                        className={"w-2/5 border-4 border-red-700 rounded-lg text-red-500 font-bold hover:bg-red-700 hover:text-white transition-all"}>
+                        Clear
+                    </button>
+                    <button
+                        className={"w-2/5 p-2 rounded-lg transition-all text-white duration-300 bg-gradient-to-r from-green-300 to-green-700 via-green-600 bg-size-200 bg-pos-0 hover:bg-pos-100"}
+                        onClick={handleAnswerSubmit}>Submit
+                    </button>
+                </div>
             </div>
 
             <div className={"w-full border-r-8 h-fit mt-12 border-t-8 border-black"}>
+                <h3 className={"text-3xl text-white m-4 font-rock-salt"}>AI Generated Response</h3>
                 <Prism language={language.toLowerCase()} style={dracula} showLineNumbers={true} wrapLines={true}
                        lineProps={{style: {wordBreak: 'break-all', whiteSpace: 'pre-wrap'}}}>
                     {resultCode}
