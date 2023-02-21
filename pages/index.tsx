@@ -10,10 +10,44 @@ import {GrLanguage} from "react-icons/gr";
 
 
 export default function Home() {
+    const [language, setLanguage] = useState("jsx");
     const [problem, setProblem] = useState("")
     const [code, setCode] = useState("")
     const [resultCode, setResultCode] = useState("")
-    const [language, setLanguage] = useState("jsx");
+    const [selectedTag, setSelectedTag] = useState("");
+
+
+    const ExampleQuizTag = ({
+                                selectedTag,
+                                setSelectedTag,
+                                tagText,
+                                exampleLanguage,
+                                exampleProblem,
+                                exampleCode
+                            }: any) => {
+        function handleClick() {
+            setSelectedTag(tagText);
+            setLanguage(exampleLanguage);
+            setProblem(exampleProblem);
+            setCode(exampleCode);
+        }
+
+        return (
+            <div className={"w-fit p-1 bg-gradient-to-r from-green-400 to-green-700 rounded-full cursor-pointer"}>
+                {/*<button*/}
+                {/*    className={`${*/}
+                {/*        selectedTag === tagText ? "bg-blue" : "bg-grey-300"*/}
+                {/*    } cursor-pointer bg-gradient-to-r from-green-300 to-green-700 rounded-full w-full h-full hover:bg-blue transition-all`}*/}
+                {/*    onClick={handleClick}*/}
+                {/*>*/}
+                <button
+                    className={`w-full h-full text-white ${selectedTag === tagText ? "bg-gradient-to-r from-green-400 to-green-700" : "bg-grey-200"} rounded-full px-4 py-0.5`}
+                    onClick={handleClick}>
+                    {tagText}
+                </button>
+            </div>
+        );
+    };
 
     function handleAnswerSubmit() {
         const toastId = toast.loading("Processing...");
@@ -41,8 +75,7 @@ export default function Home() {
     }
 
     return (
-        <div className={"flex flex-col justify-start items-center h-screen bg-grey-100"}>
-
+        <div className={"flex flex-col justify-start items-center h-screen bg-grey-200"}>
             {/* Hero Section */}
             <div
                 className={"flex md:flex-row flex-col [&>*]:my-2 justify-between items-center h-fit md:w-1/3 w-full mt-12"}>
@@ -52,10 +85,34 @@ export default function Home() {
                 {/*<img className={"w-32"} alt={"logo"} src={"/icon.png"} />*/}
                 <h1 className={"text-6xl text-white mt-20 font-rock-salt text-green-100"}>DebugMe</h1>
                 <h2 className={"flex md:flex-col flex-row [&>*]:mx-2 items-end text-2xl text-white"}>
-                    <span className={"text-red-700"}>Squish🦶🏼</span>
-                    <span className={"text-yellow-500"}>Bugs🐞</span>
-                    <span className={"text-green-600"}>Faster🏃🏽‍</span>
+                    <span className={"text-green-300 font-rock-salt"}>Squish🦶🏼</span>
+                    <span className={"text-green-500 font-rock-salt"}>Bugs🐞</span>
+                    <span className={"text-green-700 font-rock-salt"}>Faster🏃🏽‍</span>
                 </h2>
+            </div>
+
+            {/* Example Section */}
+            <div className={"flex flex-col mt-12"}>
+                <h3 className={"text-2xl text-white ml-2"}>Try an Example</h3>
+                <div className={"flex flex-wrap [&>*]:m-2"}>
+                    <ExampleQuizTag selectedTag={selectedTag} setSelectedTag={setSelectedTag}
+                                    tagText={"Missing syntax"} exampleLanguage={"python"}
+                                    exampleProblem={"why does this code keep crashing?"}
+                                    exampleCode={"print(\"hello world)"}/>
+                    <ExampleQuizTag selectedTag={selectedTag} setSelectedTag={setSelectedTag}
+                                    tagText={"Modify function"} exampleLanguage={"javascript"}
+                                    exampleProblem={"modify this function so that it left pads the variables with 0 if they are less than 10 and returns the result"}
+                                    exampleCode={"export function getFormattedTime2(time: number) {\n" +
+                                        "    const minutes = time / 60;\n" +
+                                        "    const seconds = time % 60;\n" +
+                                        "\n" +
+                                        "    return `${minutes}:${seconds}`;\n" +
+                                        "}"}/>
+                    <ExampleQuizTag selectedTag={selectedTag} setSelectedTag={setSelectedTag}
+                                    tagText={"Controlled vs. uncontrolled inputs"} exampleLanguage={""}
+                                    exampleProblem={"difference between controlled and uncontrolled inputs in React with code examples"}
+                                    exampleCode={""}/>
+                </div>
             </div>
 
 
@@ -63,19 +120,19 @@ export default function Home() {
             <div className={"flex flex-col items-center md:w-1/2 w-full [&>*]:my-1 mt-10"}>
                 <input onChange={(event: any) => {
                     setLanguage(event.target.value)
-                }} className={"w-11/12 bg-grey-200 p-2 rounded-lg"}
-                       placeholder={"Programming language (optional) - python, javascript, sql..."}/>
+                }} className={"w-11/12 bg-grey-100 p-2 rounded-lg text-grey-200"}
+                       placeholder={"Programming language (optional) - python, javascript, sql..."} value={language}/>
                 {/*<IconInputBox icon={GrLanguage} placeholder={"Enter programming language"} state={language} handleChange={handleLanguageChange}/>*/}
-                <textarea className={"w-11/12 p-2 bg-grey-200 rounded-lg"}
+                <textarea className={"w-11/12 p-2 bg-grey-100 text-grey-200 rounded-lg"}
                           placeholder={"Your problem - 'Why is there a syntax error..., How to get today's date...'"}
                           onChange={(event) => {
                               setProblem(event.target.value)
-                          }}/>
-                <textarea className={"w-11/12 h-60 bg-grey-200 p-2 rounded-lg"}
+                          }} value={problem}/>
+                <textarea className={"w-11/12 h-60 bg-grey-100 p-2 rounded-lg text-grey-200"}
                           placeholder={"Paste your code here (optional)"}
                           onChange={(event) => {
                               setCode(event.target.value)
-                          }}/>
+                          }} value={code}/>
                 <button
                     className={"w-1/2 p-2 rounded-lg transition-all text-white duration-300 bg-gradient-to-r from-green-300 to-green-700 via-green-600 bg-size-200 bg-pos-0 hover:bg-pos-100"}
                     onClick={handleAnswerSubmit}>Submit
@@ -112,28 +169,5 @@ const IconInputBox = ({icon: Icon, placeholder, state, handleChange}: IconInputB
                 value={state}
             />
         </div>
-    );
-};
-
-const ExampleQuizTag = ({selectedTag, setSelectedTag, quizTopic}: any) => {
-    function getRandomQuizType() {
-        const items = ["sa", "mc", "tf", "fb"];
-        const idx = Math.floor(Math.random() * 4);
-        return items[idx];
-    }
-
-    function handleClick() {
-        setSelectedTag(quizTopic);
-    }
-
-    return (
-        <button
-            className={`${
-                selectedTag === quizTopic ? "bg-blue" : "bg-grey-300"
-            } cursor-pointer border-blue border-2 rounded-full m-1 px-4 py-1 w-fit hover:bg-blue transition-all`}
-            onClick={handleClick}
-        >
-            {quizTopic}
-        </button>
     );
 };

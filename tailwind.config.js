@@ -11,8 +11,9 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                "grey-100": "#282A36",
-                "grey-200": "#606582",
+                "grey-50": "#9CA3AF",
+                "grey-100": "#606582",
+                "grey-200": "#282A36",
             },
             backgroundSize: {
                 'size-200': '200% 200%',
